@@ -19,9 +19,10 @@ public class Messenger implements EmailAPI {
     String mailFrom = "bitclicker6@gmail.com";
     String mailTo = "bitclicker7@gmail.com";
     String password = "R4q5.8aT5";
+    private static String image = "temp.jpg";
 
     @Override
-    public void sendCaptcha(String pathToFile) throws Exception{
+    public void sendCaptcha() throws Exception{
 
 
         String subject = "New captcha!";
@@ -53,7 +54,7 @@ public class Messenger implements EmailAPI {
 
         // second part (the image)
         messageBodyPart = new MimeBodyPart();
-        DataSource fds = new FileDataSource(pathToFile);
+        DataSource fds = new FileDataSource(image);
         messageBodyPart.setDataHandler(new DataHandler(fds));
         messageBodyPart.setHeader("Content-ID","<image>");
 
@@ -105,7 +106,7 @@ class Test {
     public static void main(String[] args) throws Exception {
         EmailAPI email = new Messenger();
 
-//        email.sendCaptcha("C:\\ttttttttttt\\img2.jpg");
+//        email.sendCaptcha();
 
         email.getSolvedCaptcha();
     }
