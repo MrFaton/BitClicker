@@ -1,6 +1,6 @@
-package com.mr_faton.email_api.impl;
+package com.mr_faton.message.impl;
 
-import com.mr_faton.email_api.EmailAPI;
+import com.mr_faton.message.MessageAPI;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -10,16 +10,19 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import java.util.Map;
 import java.util.Properties;
 
 /**
  * Created by root on 05.06.2015.
  */
-public class Messenger implements EmailAPI {
-    String mailFrom = "bitclicker6@gmail.com";
-    String mailTo = "bitclicker7@gmail.com";
-    String password = "R4q5.8aT5";
+public class EmailMessenger implements MessageAPI {
+    private String mailFrom;
+    private String mailFromPassword;
+    private String mailTo;
     private static String image = "temp.jpg";
+
+
 
     @Override
     public void sendCaptcha() throws Exception{
@@ -32,7 +35,7 @@ public class Messenger implements EmailAPI {
         properties.put("mail.smtps.auth", "true");
         properties.put("mail.smtps.host", "smtp.gmail.com");
         properties.put("mail.smtps.user", mailFrom);
-        properties.put("password", password);
+        properties.put("password", mailFromPassword);
 
 
 
@@ -83,7 +86,7 @@ public class Messenger implements EmailAPI {
         try {
             Session session = Session.getInstance(props, null);
             Store store = session.getStore("imaps");
-            store.connect(imapHost, mailFrom, password);
+            store.connect(imapHost, mailFrom, mailFromPassword);
             Folder inbox = store.getFolder("INBOX");
             inbox.open(Folder.READ_WRITE);
 
@@ -101,12 +104,23 @@ public class Messenger implements EmailAPI {
         }
         return solvedCaptcha;
     }
+
+    @Override
+    public void setMailFrom(Map<String, String> mapMailFrom) {
+        mailFrom = mapMailFrom.get("login");
+        mailFromPassword = mapMailFrom.get("password");
+    }
+
+    @Override
+    public void setMailTo(String mailTo) {
+        this.mailTo = mailTo;
+    }
 }
 class Test {
     public static void main(String[] args) throws Exception {
-        EmailAPI email = new Messenger();
+        MessageAPI email = new EmailMessenger();
 
-//        email.sendCaptcha();
+//        email.typeCaptcha();
 
         email.getSolvedCaptcha();
     }
